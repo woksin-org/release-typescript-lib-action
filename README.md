@@ -1,7 +1,7 @@
-# GitHub Action - Action Name Here
-This GitHub action ...
+# GitHub Action - Release TypeScript Library
+This GitHub action releases a TypeScript/JavaScript library by updating its package version(s) and publishing it to npm
 
-![Github JavaScript Actions CI/CD](https://github.com/dolittle/repository-here/workflows/Github%20JavaScript%20Actions%20CI/CD/badge.svg)
+![Github JavaScript Actions CI/CD](https://github.com/dolittle/release-typescript-lib-action/workflows/Github%20JavaScript%20Actions%20CI/CD/badge.svg)
 
 ### Pre requisites
 Create a workflow `.yml` file in your `.github/workflows` directory. An [example workflow](#example-workflow) is available below.
@@ -9,10 +9,7 @@ Create a workflow `.yml` file in your `.github/workflows` directory. An [example
 For more information, reference the GitHub Help Documentation for [Creating a workflow file](https://help.github.com/en/articles/configuring-a-workflow#creating-a-workflow-file)
 
 ### Inputs
-- `some-input`: Description here
-
-### Outputs
-- `some-output`: Description here
+- `version`: The version
 
 ### Example Workflow
 ```yaml
