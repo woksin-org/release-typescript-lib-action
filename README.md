@@ -10,6 +10,7 @@ For more information, reference the GitHub Help Documentation for [Creating a wo
 
 ### Inputs
 - `version`: The version
+- `root` (optional): The relative path to the root of the TypeScript project. default = root of the repository
 
 ### Example Workflow
 ```yaml
