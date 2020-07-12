@@ -1,14 +1,14 @@
-name: 'The Action Name'
-description: 'The action description'
+name: Release TypeScript Lib
+description: Releases a typescript library
 inputs:
-  someInput:
-    description: Description of the input
+  version:
+    description: The version to release
     required: true
+  root:
+    description: The relative path to the root of the TypeScript project. default = root of the repository
+    required: true
+    default: ''
 
-outputs:
-  output:
-    description: Description of the output
-  
 runs:
   using: 'node12'
   main: 'release/index.js'
