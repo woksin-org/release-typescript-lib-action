@@ -26,7 +26,7 @@
     "@actions/github": "^4.0.0",
     "@dolittle/github-actions.shared.logging": "^1.1.1",
     "@dolittle/github-actions.shared.rudiments": "^1.1.1",
-    "@dolittle/typescript.build": "^6.0.0-rc.4",
+    "@dolittle/typescript.build": "6.0.0-rc.11",
     "edit-json-file": "^1.4.0",
     "semver": "^7.3.2"
   }
