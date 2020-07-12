@@ -4,6 +4,7 @@
 import path from 'path';
 import { valid as isValidSemver, SemVer } from 'semver';
 import * as core from '@actions/core';
+import * as github from '@actions/github';
 import { exec } from '@actions/exec';
 import { Logger } from '@dolittle/github-actions.shared.logging';
 import { Project } from '@dolittle/typescript.build';
@@ -21,6 +22,15 @@ export async function run() {
         const project = new Project(root);
         console.log(`Creating release from root ${project.root}`);
         changeVersionNumbers(version, project);
+        await exec(
+            `git commit --am "Update packages and workspace dependencies to ${version}"`,
+            undefined,
+            { cwd: root, ignoreReturnCode: true});
+        const branchName = path.basename(github.context.ref);
+        await exec(
+            `git push origin ${branchName}`,
+            undefined,
+            { cwd: root, ignoreReturnCode: true});
         if (!await publishPackages(project, new SemVer(version))) throw new Error('One or more packages failed to publish');
     }
  catch (error) {
@@ -68,7 +78,6 @@ async function publishPackages(project: Project, version: SemVer) {
         const prerelease = version.prerelease;
         if (!prerelease || prerelease.length === 0) args.push(`--tag ${prerelease[0]}`);
         if (await exec('npm publish', args, { ignoreReturnCode: true, cwd: root}) !== 0) allSucceeded = false;
-
     }
     return allSucceeded;
 }
