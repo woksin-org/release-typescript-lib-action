@@ -92,7 +92,10 @@ async function publishPackages(project: Project, version: SemVer) {
     for (const root of packages.map(_ => _.rootFolder)) {
         const args = [];
         const prerelease = version.prerelease;
-        if (!prerelease || prerelease.length === 0) args.push(`--tag ${prerelease[0]}`);
+        if (prerelease?.length && prerelease.length > 0) {
+            args.push('--tag');
+            args.push(prerelease[0]);
+        }
         if (await exec('npm publish', args, { ignoreReturnCode: true, cwd: root}) !== 0) allSucceeded = false;
     }
     return allSucceeded;
