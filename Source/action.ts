@@ -73,13 +73,13 @@ function changeVersionNumbers(version: string, project: Project) {
             for (let field of dependencyFields) {
                 const dependencies = packageObject[field] ?? {};
                 for (let dependencyName of Object.keys(dependencies)) {
-                    console.log(`old dependency ${dependencyName}`);
-                    console.log(`old field ${field}`);
-                    dependencyName = dependencyName.replace('.', '\\.');
-                    field = field.replace('.', '\\.');
-                    console.log(`new dependency ${dependencyName}`);
-                    console.log(`new field ${field}`);
                     if (workspaceNames.includes(dependencyName)) {
+                        console.log(`old dependency ${dependencyName}`);
+                        console.log(`old field ${field}`);
+                        dependencyName = dependencyName.replace('.', '\\.');
+                        field = field.replace('.', '\\.');
+                        console.log(`new dependency ${dependencyName}`);
+                        console.log(`new field ${field}`);
                         const key = `${field}.${dependencyName}`;
                         console.log(`version ${version}`);
                         console.log(`set ${key}`);
