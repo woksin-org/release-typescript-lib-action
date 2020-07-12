@@ -18,9 +18,8 @@ export async function run() {
         const version = core.getInput('version', { required: true });
         if (!isValidSemver(version)) throw new Error(`${version} is not a valid SemVer`);
         const root = path.join(process.env.GITHUB_WORKSPACE, core.getInput('root', { required: true }));
-        console.log(`Root ${root}`);
         const project = new Project(root);
-        console.log(`Creating release from root ${project.root}`);
+        logger.info(`Creating release from root ${project.root}`);
         changeVersionNumbers(version, project);
         await exec(
             'git config',
@@ -66,17 +65,18 @@ function changeVersionNumbers(version: string, project: Project) {
     packages.forEach(_ => {
         const file = editJsonFile(_.path);
         const packageObject = file.toObject();
-        console.log(packageObject);
         file.set('version', version);
 
         if (project.hasWorkspaces()) {
             const workspaceNames = packages.map(_ => _.packageObject.name);
             const dependencyFields = Object.keys(packageObject).filter(_ => _.endsWith('dependencies') || _.endsWith('Dependencies'));
-            for (const field of dependencyFields) {
+            for (let field of dependencyFields) {
                 const dependencies = packageObject[field] ?? {};
-                for (const dependencyName of Object.keys(dependencies)) {
+                for (let dependencyName of Object.keys(dependencies)) {
+                    dependencyName = dependencyName.replace('.', '\\.');
+                    field = field.replace('.', '\\.');
                     if (workspaceNames.includes(dependencyName)) {
-                        file.set(`${field}}.${dependencyName}`, version);
+                        file.set(`${field}.${dependencyName}`, version);
                     }
                 }
             }
@@ -90,7 +90,6 @@ async function publishPackages(project: Project, version: SemVer) {
     const packages = getPackages(project);
     let allSucceeded = true;
     for (const root of packages.map(_ => _.rootFolder)) {
-        console.log(`Publishing from ${root}`);
         const args = [];
         const prerelease = version.prerelease;
         if (!prerelease || prerelease.length === 0) args.push(`--tag ${prerelease[0]}`);
