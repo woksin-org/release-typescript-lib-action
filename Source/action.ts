@@ -26,14 +26,14 @@ export async function run() {
             'git config',
             [
                 'user.email',
-                '"actions@github.com"'
+                '"build@dolittle.com"'
             ],
             { cwd: root, ignoreReturnCode: true});
         await exec(
             'git config',
             [
                 'user.name',
-                '"github-actions"'
+                '"dolittle-build"'
             ],
             { cwd: root, ignoreReturnCode: true});
         await exec(
