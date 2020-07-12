@@ -1,9 +1,12 @@
 {
-    "extends": "./node_modules/@dolittle/typescript.build/TSConfig/tsconfig.base.json",
+    "extends": "@dolittle/typescript.config",
     "compilerOptions": {
         "target": "es6",
+        "module": "CommonJS",
         "declaration": false,
-        "outDir": "./"
+        "declarationMap": false,
+        "composite": false,
+        "outDir": "./Distribution"
     },
     "include": ["**/*.ts"],
     "exclude": ["node_modules"]

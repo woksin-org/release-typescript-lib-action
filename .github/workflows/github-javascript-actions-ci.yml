@@ -45,3 +45,11 @@ jobs:
         token: ${{  secrets.BUILD_PAT  }}
         cascading-release: ${{ steps.context.outputs.cascading-release }}
         version: ${{ steps.increment-version.outputs.next-version }}
+    - name: Release javascript 
+      if: ${{ steps.context.outputs.should-publish == 'true' }}
+      uses: ./
+      with:
+        version: ${{ steps.increment-version.outputs.next-version }}
+      env:
+        NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+        
