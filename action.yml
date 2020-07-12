@@ -7,7 +7,6 @@ inputs:
   root:
     description: The relative path to the root of the TypeScript project. default = root of the repository
     required: true
-    default: ''
 
 runs:
   using: 'node12'
