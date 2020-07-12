@@ -24,7 +24,10 @@ export async function run() {
         changeVersionNumbers(version, project);
         await exec(
             'git commit',
-            [`-am "Update packages and workspace dependencies to ${version}"`],
+            [
+                '--author="github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>"',
+                `-am "Update packages and workspace dependencies to ${version}"`
+            ],
             { cwd: root, ignoreReturnCode: true});
         const branchName = path.basename(github.context.ref);
         await exec(
