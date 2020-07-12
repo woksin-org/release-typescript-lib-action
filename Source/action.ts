@@ -25,14 +25,14 @@ export async function run() {
         await exec(
             'git config',
             [
-                '--local',
+                '--global',
                 'user.email "actions@github.com"',
             ],
             { cwd: root, ignoreReturnCode: true});
         await exec(
             'git config',
             [
-                '--local',
+                '--global',
                 'user.name "github-actions"'
             ],
             { cwd: root, ignoreReturnCode: true});
