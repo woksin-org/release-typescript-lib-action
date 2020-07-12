@@ -1,0 +1,14 @@
+name: Release TypeScript Lib
+description: Releases a typescript library
+inputs:
+  version:
+    description: The version to release
+    required: true
+  root:
+    description: The relative path to the root of the TypeScript project. default = root of the repository
+    required: true
+    default: ''
+
+runs:
+  using: 'node12'
+  main: 'release/index.js'
