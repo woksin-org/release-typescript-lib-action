@@ -50,6 +50,7 @@ jobs:
       uses: ./
       with:
         version: ${{ steps.increment-version.outputs.next-version }}
+        root: '.'
       env:
         NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         
