@@ -23,7 +23,7 @@ export async function run() {
         console.log(`Creating release from root ${project.root}`);
         changeVersionNumbers(version, project);
         await exec(
-            `git commit --am "Update packages and workspace dependencies to ${version}"`,
+            `git commit --am \"Update packages and workspace dependencies to ${version}\"`,
             undefined,
             { cwd: root, ignoreReturnCode: true});
         const branchName = path.basename(github.context.ref);
