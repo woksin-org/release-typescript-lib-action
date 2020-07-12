@@ -23,6 +23,20 @@ export async function run() {
         console.log(`Creating release from root ${project.root}`);
         changeVersionNumbers(version, project);
         await exec(
+            'git config',
+            [
+                '--local',
+                'user.email "actions@github.com"',
+            ],
+            { cwd: root, ignoreReturnCode: true});
+        await exec(
+            'git config',
+            [
+                '--local',
+                'user.name "github-actions"'
+            ],
+            { cwd: root, ignoreReturnCode: true});
+        await exec(
             'git commit',
             [
                 '--author="github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>"',
