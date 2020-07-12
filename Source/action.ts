@@ -65,6 +65,7 @@ function changeVersionNumbers(version: string, project: Project) {
     packages.forEach(_ => {
         const file = editJsonFile(_.path);
         const packageObject = file.toObject();
+        logger.info(`Updating ${_.packageObject.name} to version ${version}`);
         file.set('version', version);
 
         if (project.hasWorkspaces()) {
@@ -74,21 +75,15 @@ function changeVersionNumbers(version: string, project: Project) {
                 const dependencies = packageObject[field] ?? {};
                 for (let dependencyName of Object.keys(dependencies)) {
                     if (workspaceNames.includes(dependencyName)) {
-                        console.log(`old dependency ${dependencyName}`);
-                        console.log(`old field ${field}`);
+                        logger.info(`Updating workspace ${field} '${dependencyName}' to version ${version}`);
                         dependencyName = dependencyName.replace('.', '\\.');
                         field = field.replace('.', '\\.');
-                        console.log(`new dependency ${dependencyName}`);
-                        console.log(`new field ${field}`);
                         const key = `${field}.${dependencyName}`;
-                        console.log(`version ${version}`);
-                        console.log(`set ${key}`);
-                        file.set(`${key}`, version);
+                        file.set(key, version);
                     }
                 }
             }
         }
-        console.log(file.toObject());
         file.save();
     });
 }
@@ -96,14 +91,19 @@ function changeVersionNumbers(version: string, project: Project) {
 async function publishPackages(project: Project, version: SemVer) {
     const packages = getPackages(project);
     let allSucceeded = true;
-    for (const root of packages.map(_ => _.rootFolder)) {
+    for (const packageToPublish of packages) {
+        if ((packageToPublish.packageObject as any).private === true) {
+            logger.info(`Skipping publishing of ${packageToPublish.packageObject.name}`);
+            continue;
+        }
+        logger.info(`Publishing ${packageToPublish.packageObject.name}`);
         const args = [];
         const prerelease = version.prerelease;
         if (prerelease?.length && prerelease.length > 0) {
             args.push('--tag');
             args.push(prerelease[0]);
         }
-        if (await exec('npm publish', args, { ignoreReturnCode: true, cwd: root}) !== 0) allSucceeded = false;
+        if (await exec('npm publish', args, { ignoreReturnCode: true, cwd: project.root}) !== 0) allSucceeded = false;
     }
     return allSucceeded;
 }
