@@ -103,7 +103,7 @@ async function publishPackages(project: Project, version: SemVer) {
             args.push('--tag');
             args.push(prerelease[0]);
         }
-        if (await exec('npm publish', args, { ignoreReturnCode: true, cwd: project.root}) !== 0) allSucceeded = false;
+        if (await exec('npm publish', args, { ignoreReturnCode: true, cwd: packageToPublish.rootFolder}) !== 0) allSucceeded = false;
     }
     return allSucceeded;
 }
