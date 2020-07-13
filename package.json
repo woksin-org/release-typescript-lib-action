@@ -21,13 +21,13 @@
     "del-cli": "^3.0.1"
   },
   "dependencies": {
-    "@actions/core": "^1.2.4",
-    "@actions/exec": "^1.0.4",
-    "@actions/github": "^4.0.0",
-    "@dolittle/github-actions.shared.logging": "^1.1.1",
-    "@dolittle/github-actions.shared.rudiments": "^1.1.1",
-    "@dolittle/typescript.build": "6.0.0-rc.16",
-    "edit-json-file": "^1.4.0",
-    "semver": "^7.3.2"
+    "@actions/core": "1.2.4",
+    "@actions/exec": "1.0.4",
+    "@actions/github": "4.0.0",
+    "@dolittle/github-actions.shared.logging": "1.1.1",
+    "@dolittle/github-actions.shared.rudiments": "1.1.1",
+    "@dolittle/typescript.build": "rc",
+    "edit-json-file": "1.4.0",
+    "semver": "7.3.2"
   }
 }

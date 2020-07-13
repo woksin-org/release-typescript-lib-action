@@ -48,8 +48,7 @@ export async function run() {
             undefined,
             { cwd: root, ignoreReturnCode: true});
         if (!await publishPackages(project, new SemVer(version))) throw new Error('One or more packages failed to publish');
-    }
- catch (error) {
+    } catch (error) {
         fail(error);
     }
 }
