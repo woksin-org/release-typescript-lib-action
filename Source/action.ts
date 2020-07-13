@@ -17,7 +17,7 @@ export async function run() {
     try {
         const version = core.getInput('version', { required: true });
         if (!isValidSemver(version)) throw new Error(`${version} is not a valid SemVer`);
-        const root = path.join(process.env.GITHUB_WORKSPACE, core.getInput('root', { required: true }));
+        const root = path.join(process.env.GITHUB_WORKSPACE!, core.getInput('root', { required: true }));
         const project = new Project(root);
         logger.info(`Creating release from root ${project.root}`);
         changeVersionNumbers(version, project);
@@ -97,11 +97,11 @@ async function publishPackages(project: Project, version: SemVer) {
             continue;
         }
         logger.info(`Publishing ${packageToPublish.packageObject.name}`);
-        const args = [];
+        const args: string[] = [];
         const prerelease = version.prerelease;
         if (prerelease?.length && prerelease.length > 0) {
             args.push('--tag');
-            args.push(prerelease[0]);
+            args.push(prerelease[0] as string);
         }
         if (await exec('npm publish', args, { ignoreReturnCode: true, cwd: packageToPublish.rootFolder}) !== 0) allSucceeded = false;
     }
