@@ -75,8 +75,8 @@ function changeVersionNumbers(version: string, project: Project) {
                 for (let dependencyName of Object.keys(dependencies)) {
                     if (workspaceNames.includes(dependencyName)) {
                         logger.info(`Updating workspace ${field} '${dependencyName}' to version ${version}`);
-                        dependencyName = dependencyName.replace('.', '\\.');
-                        field = field.replace('.', '\\.');
+                        dependencyName = dependencyName.replaceAll('.', '\\.');
+                        field = field.replaceAll('.', '\\.');
                         const key = `${field}.${dependencyName}`;
                         file.set(key, version);
                     }
