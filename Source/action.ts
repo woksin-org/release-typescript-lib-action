@@ -62,7 +62,7 @@ function getPackages(project: Project) {
 function changeVersionNumbers(version: string, project: Project) {
     const packages = getPackages(project);
     packages.forEach(_ => {
-        const file = editJsonFile(_.path);
+        const file = editJsonFile(_.path, { stringify_width: 4 });
         const packageObject = file.toObject();
         logger.info(`Updating ${_.packageObject.name} to version ${version}`);
         file.set('version', version);
@@ -75,8 +75,8 @@ function changeVersionNumbers(version: string, project: Project) {
                 for (let dependencyName of Object.keys(dependencies)) {
                     if (workspaceNames.includes(dependencyName)) {
                         logger.info(`Updating workspace ${field} '${dependencyName}' to version ${version}`);
-                        dependencyName = dependencyName.replace('.', '\\.');
-                        field = field.replace('.', '\\.');
+                        dependencyName = dependencyName.replace(/\./g, '\\.');
+                        field = field.replace(/\./g, '\\.');
                         const key = `${field}.${dependencyName}`;
                         file.set(key, version);
                     }
