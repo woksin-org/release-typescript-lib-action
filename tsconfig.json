@@ -6,6 +6,7 @@
         "declaration": false,
         "declarationMap": false,
         "composite": false,
+        "watch": false,
         "outDir": "./Distribution"
     },
     "include": ["**/*.ts"],
