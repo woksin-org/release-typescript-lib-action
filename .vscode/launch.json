@@ -1,0 +1,29 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "pwa-node",
+            "request": "launch",
+            "name": "Launch Program",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "outputCapture": "std",
+            "internalConsoleOptions": "openOnSessionStart",
+            "program": "${workspaceFolder}/Distribution/action.js",
+            "preLaunchTask": "tsc: build - tsconfig.json",
+            "outFiles": [
+                "${workspaceFolder}/Distribution/**/*.js"
+            ],
+            "cwd": "${workspaceFolder}/../JavaScript.SDK",
+            "env": {
+                "INPUT_VERSION": "6.3.1",
+                "INPUT_ROOT": ".",
+                "GITHUB_WORKSPACE": "."
+            }
+        }
+    ]
+}

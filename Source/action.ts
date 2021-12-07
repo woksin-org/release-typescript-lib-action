@@ -19,35 +19,17 @@ export async function run() {
         if (!isValidSemver(version)) throw new Error(`${version} is not a valid SemVer`);
         const root = path.join(process.env.GITHUB_WORKSPACE!, core.getInput('root', { required: true }));
         const project = new Project(root);
+
         logger.info(`Creating release from root ${project.root}`);
-        changeVersionNumbers(version, project);
-        await exec(
-            'git config',
-            [
-                'user.email',
-                '"build@dolittle.com"'
-            ],
-            { cwd: root, ignoreReturnCode: true});
-        await exec(
-            'git config',
-            [
-                'user.name',
-                '"dolittle-build"'
-            ],
-            { cwd: root, ignoreReturnCode: true});
-        await exec(
-            'git commit',
-            [
-                '--author="github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>"',
-                `-am "Update packages and workspace dependencies to ${version}"`
-            ],
-            { cwd: root, ignoreReturnCode: true});
-        const branchName = path.basename(github.context.ref);
-        await exec(
-            `git push origin ${branchName}`,
-            undefined,
-            { cwd: root, ignoreReturnCode: true});
-        if (!await publishPackages(project, new SemVer(version))) throw new Error('One or more packages failed to publish');
+
+        const changedFiles = changeVersionNumbers(version, project);
+
+        await commitChangedFiles(changedFiles, root, version);
+        await pushCommittedChanges(root);
+
+        if (!await publishPackages(project, new SemVer(version))) {
+            throw new Error('One or more packages failed to publish');
+        }
     } catch (error) {
         fail(error);
     }
@@ -59,9 +41,9 @@ function getPackages(project: Project) {
         : [project.rootPackage];
 }
 
-function changeVersionNumbers(version: string, project: Project) {
+function changeVersionNumbers(version: string, project: Project): string[] {
     const packages = getPackages(project);
-    packages.forEach(_ => {
+    const changedFiles = packages.map(_ => {
         const file = editJsonFile(_.path, { stringify_width: 4 });
         const packageObject = file.toObject();
         logger.info(`Updating ${_.packageObject.name} to version ${version}`);
@@ -84,7 +66,55 @@ function changeVersionNumbers(version: string, project: Project) {
             }
         }
         file.save();
+        return _.path;
     });
+    return changedFiles;
+}
+
+async function commitChangedFiles(changedFiles: string[], gitRoot: string, version: string) {
+    await configureGitForCommit(gitRoot);
+
+    for (const file of changedFiles) {
+        await exec(
+            'git add',
+            [
+                file
+            ],
+            { cwd: gitRoot, ignoreReturnCode: true});
+    }
+
+    await exec(
+        'git commit',
+        [
+            '--author="github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>"',
+            `-m "Update packages and workspace dependencies to ${version}"`
+        ],
+        { cwd: gitRoot, ignoreReturnCode: true});
+}
+
+async function configureGitForCommit(gitRoot: string) {
+    await exec(
+        'git config',
+        [
+            'user.email',
+            '"build@dolittle.com"'
+        ],
+        { cwd: gitRoot, ignoreReturnCode: true});
+    await exec(
+        'git config',
+        [
+            'user.name',
+            '"dolittle-build"'
+        ],
+        { cwd: gitRoot, ignoreReturnCode: true});
+}
+
+async function pushCommittedChanges(gitRoot: string) {
+    const branchName = path.basename(github.context.ref);
+    await exec(
+        `git push origin ${branchName}`,
+        undefined,
+        { cwd: gitRoot, ignoreReturnCode: true});
 }
 
 async function publishPackages(project: Project, version: SemVer) {
