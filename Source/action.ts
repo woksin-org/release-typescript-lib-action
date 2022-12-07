@@ -7,30 +7,33 @@ import * as core from '@actions/core';
 import * as github from '@actions/github';
 import { exec } from '@actions/exec';
 import { Logger } from '@dolittle/github-actions.shared.logging';
-import { Project } from '@dolittle/typescript.build';
-const editJsonFile = require('edit-json-file');
+import { Project } from './Project';
 
+const editJsonFile = require('edit-json-file');
 const logger = new Logger();
 
 run();
+
+/**
+ * Runs the action.
+ */
 export async function run() {
     try {
         const version = core.getInput('version', { required: true });
-        if (!isValidSemver(version)) throw new Error(`${version} is not a valid SemVer`);
+        if (!isValidSemver(version)) {
+            throw new Error(`${version} is not a valid SemVer`);
+        }
         const root = path.join(process.env.GITHUB_WORKSPACE!, core.getInput('root', { required: true }));
         const project = new Project(root);
-
         logger.info(`Creating release from root ${project.root}`);
-
         const changedFiles = changeVersionNumbers(version, project);
-
-        await commitChangedFiles(changedFiles, root, version);
+        await commitChangedFiles(changedFiles, root, version, core.getInput('user-name'), core.getInput('user-email'));
         await pushCommittedChanges(root);
-
         if (!await publishPackages(project, new SemVer(version))) {
             throw new Error('One or more packages failed to publish');
         }
-    } catch (error) {
+
+    } catch (error: any) {
         fail(error);
     }
 }
@@ -71,8 +74,8 @@ function changeVersionNumbers(version: string, project: Project): string[] {
     return changedFiles;
 }
 
-async function commitChangedFiles(changedFiles: string[], gitRoot: string, version: string) {
-    await configureGitForCommit(gitRoot);
+async function commitChangedFiles(changedFiles: string[], gitRoot: string, version: string, username: string, email: string) {
+    await configureGitForCommit(gitRoot, username, email);
 
     for (const file of changedFiles) {
         await exec(
@@ -92,19 +95,19 @@ async function commitChangedFiles(changedFiles: string[], gitRoot: string, versi
         { cwd: gitRoot, ignoreReturnCode: true});
 }
 
-async function configureGitForCommit(gitRoot: string) {
+async function configureGitForCommit(gitRoot: string, username: string, email: string) {
     await exec(
         'git config',
         [
             'user.email',
-            '"build@dolittle.com"'
+            `"${email}}"`
         ],
         { cwd: gitRoot, ignoreReturnCode: true});
     await exec(
         'git config',
         [
             'user.name',
-            '"dolittle-build"'
+            `"${username}"`
         ],
         { cwd: gitRoot, ignoreReturnCode: true});
 }
