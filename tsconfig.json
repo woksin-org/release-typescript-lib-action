@@ -1,14 +1,15 @@
 {
     "extends": "@dolittle/typescript.config",
     "compilerOptions": {
-        "target": "ES2016",
-        "module": "CommonJS",
+        "target": "es2015",
+        "moduleResolution": "node",
+        "composite": false,
         "declaration": false,
         "declarationMap": false,
-        "composite": false,
-        "watch": false,
-        "outDir": "./Distribution"
+        "sourceMap": false,
+        "allowSyntheticDefaultImports": true,
+        "outDir": "Distribution"
     },
     "include": ["**/*.ts"],
-    "exclude": ["node_modules", "Distribution"]
+    "exclude": ["node_modules"]
 }
