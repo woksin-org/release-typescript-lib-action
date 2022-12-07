@@ -1,3 +1,9 @@
+# [1.1.0] - 2022-12-7 [PR: #25](https://github.com/dolittle/release-typescript-lib-action/pull/25)
+## Summary
+
+Update dependencies and modernise
+
+
 # [1.0.6] - 2021-12-7 [PR: #24](https://github.com/dolittle/release-typescript-lib-action/pull/24)
 ## Summary
 
