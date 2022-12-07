@@ -7,7 +7,15 @@ inputs:
   root:
     description: The relative path to the root of the TypeScript project. default = root of the repository
     required: true
+  user-email:
+    description: The email of the user that commits the version file
+    required: false
+    default: 'build@dolittle.com'
+  user-name:
+    description: The name of the user that commits the version file
+    required: false
+    default: 'dolittle-build'
 
 runs:
-  using: 'node12'
+  using: 'node16'
   main: 'release/index.js'
