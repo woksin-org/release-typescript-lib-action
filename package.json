@@ -16,7 +16,11 @@
     "devDependencies": {
         "@dolittle/typescript.build": "6.0.2",
         "@dolittle/typescript.testing": "6.0.2",
+        
+        "@types/is-valid-path": "0.1.0",
         "@types/semver": "7.3.13",
+        "@types/glob": "8.0.0",
+        "@types/is-glob": "4.0.2",
         "@vercel/ncc": "0.36.0",
         "del-cli": "5.0.0"
     },
@@ -27,6 +31,9 @@
         "@dolittle/github-actions.shared.logging": "1.1.1",
         "@dolittle/github-actions.shared.rudiments": "1.1.1",
         "edit-json-file": "1.7.0",
+        "is-valid-path": "0.1.1",
+        "is-glob": "4.0.3",
+        "glob": "8.0.3",
         "semver": "7.3.8"
     }
 }
