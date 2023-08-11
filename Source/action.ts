@@ -8,6 +8,7 @@ import * as github from '@actions/github';
 import { exec } from '@actions/exec';
 import { Logger } from '@dolittle/github-actions.shared.logging';
 import { Project } from './Project';
+import { PackageVersionsSetter } from './PackageVersionsSetter';
 
 const editJsonFile = require('edit-json-file');
 const logger = new Logger();
@@ -47,28 +48,13 @@ function getPackages(project: Project) {
 function changeVersionNumbers(version: string, project: Project): string[] {
     const packages = getPackages(project);
     const changedFiles = packages.map(_ => {
-        const file = editJsonFile(_.path, { stringify_width: 4 });
-        const packageObject = file.toObject();
-        logger.info(`Updating ${_.packageObject.name} to version ${version}`);
-        file.set('version', version);
+        const packageEditor = new PackageVersionsSetter(_.path, logger);
+        packageEditor.setVersion(version);
 
         if (project.hasWorkspaces()) {
-            const workspaceNames = packages.map(_ => _.packageObject.name);
-            const dependencyFields = Object.keys(packageObject).filter(_ => _.endsWith('dependencies') || _.endsWith('Dependencies'));
-            for (let field of dependencyFields) {
-                const dependencies = packageObject[field] ?? {};
-                for (let dependencyName of Object.keys(dependencies)) {
-                    if (workspaceNames.includes(dependencyName)) {
-                        logger.info(`Updating workspace ${field} '${dependencyName}' to version ${version}`);
-                        dependencyName = dependencyName.replace(/\./g, '\\.');
-                        field = field.replace(/\./g, '\\.');
-                        const key = `${field}.${dependencyName}`;
-                        file.set(key, version);
-                    }
-                }
-            }
+            packageEditor.setAllWorkspaceDependencyVersions(version, packages);
         }
-        file.save();
+        packageEditor.save();
         return _.path;
     });
     return changedFiles;
