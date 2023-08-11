@@ -1,9 +1,9 @@
 // Copyright (c) Dolittle. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-import { Logger, NullLogger } from '@dolittle/github-actions.shared.logging';
+import { Logger } from '@dolittle/github-actions.shared.logging';
 import editJsonFile from 'edit-json-file';
-import { Package, Project } from './Project';
+import { Package } from './Project';
 
 /**
  * Represents the package.json file editor.
@@ -63,18 +63,3 @@ export class PackageVersionsSetter {
     }
 
 }
-const project = new Project('./test');
-const packages = project.workspaces.map(_ => _.workspacePackage);
-const changedFiles = packages.map(_ => {
-    const packageEditor = new PackageVersionsSetter(_.path, {info: (s) => console.log(s), debug: (s) => console.log(s), warning: (s) => console.log(s), error: (s) => console.log(s)});
-    const version = '1.1.0';
-    packageEditor.setVersion(version);
-
-    if (project.hasWorkspaces()) {
-        packageEditor.setAllWorkspaceDependencyVersions(version, packages);
-    }
-    packageEditor.save();
-    return _.path;
-});
-
-console.log(changedFiles);
