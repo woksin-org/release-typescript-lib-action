@@ -1,3 +1,9 @@
+# [1.1.2] - 2023-8-11 [PR: #2](https://github.com/woksin-org/release-typescript-lib-action/pull/2)
+## Summary
+
+Removes debug code
+
+
 # [1.1.1] - 2023-8-11 [PR: #1](https://github.com/woksin-org/release-typescript-lib-action/pull/1)
 ## Summary
 
