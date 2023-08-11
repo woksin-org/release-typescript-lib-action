@@ -1,3 +1,13 @@
+# [1.1.1] - 2023-8-11 [PR: #1](https://github.com/woksin-org/release-typescript-lib-action/pull/1)
+## Summary
+
+Fixes an issue with how the dependencies were written to the package files.
+
+### Fixed
+
+- Setting workspace dependencies correctly in packages
+
+
 # [1.1.0] - 2022-12-7 [PR: #25](https://github.com/dolittle/release-typescript-lib-action/pull/25)
 ## Summary
 

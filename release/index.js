@@ -14,7 +14,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.PackageVersionsSetter = void 0;
 const edit_json_file_1 = __importDefault(__nccwpck_require__(4772));
-const Project_1 = __nccwpck_require__(4048);
 /**
  * Represents the package.json file editor.
  */
@@ -68,19 +67,6 @@ class PackageVersionsSetter {
     }
 }
 exports.PackageVersionsSetter = PackageVersionsSetter;
-const project = new Project_1.Project('./test');
-const packages = project.workspaces.map(_ => _.workspacePackage);
-const changedFiles = packages.map(_ => {
-    const packageEditor = new PackageVersionsSetter(_.path, { info: (s) => console.log(s), debug: (s) => console.log(s), warning: (s) => console.log(s), error: (s) => console.log(s) });
-    const version = '1.1.0';
-    packageEditor.setVersion(version);
-    if (project.hasWorkspaces()) {
-        packageEditor.setAllWorkspaceDependencyVersions(version, packages);
-    }
-    packageEditor.save();
-    return _.path;
-});
-console.log(changedFiles);
 
 
 /***/ }),
